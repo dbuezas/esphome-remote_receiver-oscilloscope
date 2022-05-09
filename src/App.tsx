@@ -1,5 +1,9 @@
 import { useState } from "react";
-import Plot from "react-plotly.js";
+// import Plotly from "plotly.js-basic-dist";
+import Plotly from "./plotly";
+import createPlotlyComponent from "react-plotly.js/factory";
+const Plot = createPlotlyComponent(Plotly);
+
 import type {Layout} from "plotly.js";
 
 import MonacoEditor from 'react-monaco-editor';
@@ -8,18 +12,14 @@ import  './log';
 
 import "./App.css";
 import logsToData from "./logs-to-data";
+import { defaultText } from "./default-code";
 
-const defaultText = `[15:26:51][D][remote.raw:028]: Received Raw: 1097, -352, 373, -1048, 1075, -355, 379, -1049, 355, -1076, 356, -1052, 356, -1079, 350, -1055, 375, -1057, 1072, -388, 334, -1075, 1073, -356, 353, -1072, 355, -1074, 356, -1052, 355, -1079, 350, -1058, 370, -1056, 1076, -350, 1096, -355,
-[15:26:51][D][remote.raw:041]:   349, -1072, 1079, -348, 381, -1052, 356, -1079, 350
-[15:26:51][D][remote.raw:028]: Received Raw: 1095, -352, 347, -1071, 1075, -356, 378, -1049, 355, -1076, 355, -1053, 356, -1080, 349, -1084, 348, -1056, 1074, -376, 346, -1075, 1074, -356, 357, -1068, 355, -1075, 356, -1053, 356, -1078, 349, -1081, 347, -1056, 1097, -352, 1073, -380,
-[15:26:51][D][remote.raw:041]:   351, -1072, 354, -1049, 1081, -374, 349, -1080, 347
-[15:26:51][D][remote.raw:028]: Received Raw: 1103, -355, 354, -1075, 1056, -373, 349, -1081, 351, -1056, 347, -1080, 347, -1075, 347, -1074, 349, -1072, 1078, -350, 381, -1051, 1081, -347, 373, -1058, 370, -1056, 346, -1077, 347, -1074, 350, -1072, 353, -1072, 1081, -349, 1081, -371,
-[15:26:51][D][remote.raw:041]:   1073, -349, 371, -1073, 348, -1073, 352, -1072, 355`;
+const gh = 'https://github.com/dbuezas/esphome-remote_receiver-oscilloscope'
 
 function App() {
   const [code, setCode] = useState(defaultText);
 
-  const {data} = logsToData(code)
+  const {data, lineToDump} = logsToData(code)
   const layout: Partial<Layout> = {
     grid:{
       rows: data.length,
@@ -30,6 +30,7 @@ function App() {
     yaxis: {
       showticklabels: false,
     },
+    height: 600,
     margin: {
       l: 10,
       r: 10,
@@ -48,14 +49,25 @@ function App() {
   /* onChange={(evn) => setCode(evn.target.value)} */
   return (
     <div style={{margin: 10}}>
+       <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
+      />
       Paste the esphome logs here:
       <br />
       <br />
       <MonacoEditor
         value={code}
         onChange={code => setCode(code)}
-        language="coffeescript"
+        theme="myCoolTheme"
+      	language="mySpecialLanguage"
         height="200px"
+        width="100%"
+        options= {{
+          automaticLayout:true,
+          lineNumbers: num=>lineToDump[num-1]?"L"+lineToDump[num-1]:"",
+          glyphMargin: false,
+        }}
       />
        
       <Plot
@@ -64,6 +76,14 @@ function App() {
         useResizeHandler
         style={{width: "100%", height: "100%"}}
       />
+      <a
+        className="github-fork-ribbon right-bottom fixed"
+        href={gh}
+        data-ribbon="Fork me on GitHub"
+        title="Fork me on GitHub"
+      >
+        Fork me on GitHub
+      </a>
     </div>
   );
 }

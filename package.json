@@ -4,30 +4,33 @@
   "private": true,
   "homepage": "https://dbuezas.github.io/esphome-remote_receiver-oscilloscope",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.2.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.0",
     "@types/node": "^16.11.33",
-    "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.3",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "@types/ws": "^8.5.3",
+    "chokidar": "^3.5.3",
+    "esbuild": "^0.14.38",
+    "esbuild-plugin-alias": "^0.2.1",
+    "http-server": "^14.1.0",
     "plotly.js": "^2.12.0",
+    "plotly.js-basic-dist": "^2.12.0",
+    "preact": "^10.7.2",
     "prismjs": "^1.17.1",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-monaco-editor": "^0.48.0",
     "react-plotly.js": "^2.5.1",
-    "react-scripts": "5.0.1",
     "typescript": "^4.6.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "ws": "^8.6.0"
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "deploy": "gh-pages -d dist",
+    "start": "NODE_ENV=development node script/build.mjs & http-server -c-1 dist & wait",
+    "check-types": "tsc --noEmit",
+    "build": "NODE_ENV=production node script/build.mjs",
+    "upgrade": "npx npm-check -u"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +52,6 @@
   },
   "devDependencies": {
     "@types/plotly.js": "^1.54.20",
-    "@types/prismjs": "^1.26.0",
     "@types/react-plotly.js": "^2.5.0",
     "gh-pages": "^3.2.3"
   }
