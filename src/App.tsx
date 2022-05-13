@@ -13,7 +13,7 @@ import "./App.css";
 import logsToData from "./logs-to-data";
 import { defaultText } from "./default-code";
 import { Flank } from "./parser";
-window.Plotly = Plotly;
+
 const Plot = createPlotlyComponent(Plotly);
 const config = { scrollZoom: true };
 const gh = "https://github.com/dbuezas/esphome-remote_receiver-oscilloscope";
@@ -39,11 +39,17 @@ function App() {
               if (isRightLine && isRightCol) {
                 Plotly.Fx.hover(
                   "plotly_1234",
-                  [{ xval: datum.x_start, yval: datum.y, curveNumber: datum.pattern_idx - 1 }],
+                  [
+                    {
+                      xval: datum.x_start,
+                      yval: datum.y,
+                      curveNumber: datum.pattern_idx - 1,
+                    },
+                  ],
                   ["xy" + (datum.pattern_idx == 1 ? "" : datum.pattern_idx)]
                 );
                 setSelected(datum);
-                return
+                return { contents: [] };
                 // return {
                 //   range: new monaco.Range(
                 //     datum.line_idx,
@@ -60,18 +66,14 @@ function App() {
             }
           }
           // remove tooltip
-          Plotly.Fx.hover(
-            "plotly_1234",
-            [],
-            []
-          );
+          Plotly.Fx.hover("plotly_1234", [], []);
         },
       }
     );
 
     return () => {
-      hoverProvider.dispose()
-    }
+      hoverProvider.dispose();
+    };
   }, [monacoRef.current]);
   useEffect(() => {
     console.log(selected);
@@ -81,7 +83,12 @@ function App() {
         ? []
         : [
             {
-              range: new monaco.Range(selected.line_idx, 0, selected.line_idx, 0),
+              range: new monaco.Range(
+                selected.line_idx,
+                0,
+                selected.line_idx,
+                0
+              ),
               options: {
                 isWholeLine: true,
                 linesDecorationsClassName: "myLineDecoration",
@@ -160,6 +167,9 @@ function App() {
         height="200px"
         width="100%"
         options={{
+          hover: {
+            delay: 0,
+          },
           wordWrap: "on",
           automaticLayout: true,
           lineNumbers: (num) => {
@@ -182,7 +192,6 @@ function App() {
           setSelected(null);
         }}
         onHover={(data: any) => {
-          console.log(data);
           const point = data.points[0];
           setSelected(point.customdata);
         }}
