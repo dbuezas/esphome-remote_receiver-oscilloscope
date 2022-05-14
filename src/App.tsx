@@ -16,17 +16,16 @@ const Plot = createPlotlyComponent(Plotly);
 const config = { scrollZoom: true };
 const gh = "https://github.com/dbuezas/esphome-remote_receiver-oscilloscope";
 
-
 function App() {
   const [code, setCode] = useState(defaultText);
   const [selected, setSelected] = useState<Flank | null>(null);
   const monacoRef = useRef<MonacoEditor | null>(null);
-  const {data, layout} = codeToPlotlyParams(code);
+  const { data, layout } = codeToPlotlyParams(code);
   const plotlyDiv = "plotly_div_id";
   useHover({ data, setSelected, plotlyDiv });
 
   useHighlight({ monacoEditor: monacoRef.current, selected });
-  
+
   return (
     <div style={{ margin: 10 }}>
       <link
@@ -39,7 +38,14 @@ function App() {
       <MonacoEditor
         ref={monacoRef}
         value={code}
-        onChange={(code) => setCode(code)}
+        onChange={(code) => {
+          setCode(code);
+          setTimeout(() => {
+            monacoRef.current?.editor
+              ?.getAction("editor.action.showHover")
+              .run();
+          }, 100);
+        }}
         theme={LOGS_THEME}
         language={LOGS_LANGUAGE}
         height="200px"
@@ -51,7 +57,9 @@ function App() {
           wordWrap: "on",
           automaticLayout: true,
           lineNumbers: (num) => {
-            const idx = data.findIndex(({ customdata }) =>  customdata![0].line_idx == num);
+            const idx = data.findIndex(
+              ({ customdata }) => customdata![0].line_idx == num
+            );
             if (idx === -1) return "";
             return "L" + (idx + 1);
           },
