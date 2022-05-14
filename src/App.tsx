@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Plotly from "./plotly";
 import createPlotlyComponent from "react-plotly.js/factory";
 
-import MonacoEditor from "react-monaco-editor";
+import MonacoEditor  from "react-monaco-editor";
 
 import { LOGS_LANGUAGE, LOGS_THEME } from "./monaco-logs-language";
 
@@ -75,8 +75,13 @@ function App() {
           setSelected(null);
         }}
         onHover={(data) => {
-          const point = data.points[0];
-          setSelected(point.customdata as unknown as Flank);
+          const flank = data.points[0].customdata as unknown as Flank
+          setSelected(flank);
+
+          monacoRef.current?.editor?.revealPosition({
+            lineNumber: flank.line_idx,
+            column: flank.col_start,
+          }, 0)
         }}
         useResizeHandler
         style={{ width: "100%", height: "100%" }}

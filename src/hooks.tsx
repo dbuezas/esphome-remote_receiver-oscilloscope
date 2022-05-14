@@ -8,12 +8,11 @@ import Plotly from "./plotly";
 
 const triggerPlotlyHover = (
   div: string,
-  hover: 
-    {
-      xval: number;
-      yval: number;
-      curveNumber: number;
-    }[],
+  hover: {
+    xval: number;
+    yval: number;
+    curveNumber: number;
+  }[],
   axes: string[]
 ) => (Plotly as any).Fx.hover(div, hover, axes);
 
