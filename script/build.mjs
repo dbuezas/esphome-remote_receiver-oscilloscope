@@ -82,6 +82,7 @@ async function build() {
         sendToClients({ action: "update-app" });
       } catch (e) {
         console.error(e);
+        // @ts-ignore
         sendToClients({ action: "error", payload: e.message });
       }
     });

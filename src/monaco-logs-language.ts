@@ -1,9 +1,11 @@
 import { languages, editor } from "monaco-editor";
 // Register a new language
-languages.register({ id: "mySpecialLanguage" });
+export const LOGS_LANGUAGE = "ESPHomeRemoteReceiverLogsLanguage"
+export const LOGS_THEME = "ESPHomeRemoteReceiverLogsTheme"
+languages.register({ id: LOGS_LANGUAGE });
 
 // Register a tokens provider for the language
-languages.setMonarchTokensProvider("mySpecialLanguage", {
+languages.setMonarchTokensProvider(LOGS_LANGUAGE, {
   tokenizer: {
     root: [
       ["Received Raw:", "starter"],
@@ -19,7 +21,7 @@ languages.setMonarchTokensProvider("mySpecialLanguage", {
 });
 
 // Define a new theme that contains only rules that match this language
-editor.defineTheme("myCoolTheme", {
+editor.defineTheme(LOGS_THEME, {
   base: "vs-dark",
   inherit: true,
   rules: [
@@ -40,7 +42,7 @@ editor.defineTheme("myCoolTheme", {
 
 
 // Register a completion item provider for the new language
-languages.registerCompletionItemProvider("mySpecialLanguage", {
+languages.registerCompletionItemProvider(LOGS_LANGUAGE, {
   provideCompletionItems: () => ({
     suggestions: [
       // {
